@@ -10,14 +10,14 @@ const { initSocket } = require("./socket/index");
 
 const app = express();
 require("dotenv").config();
-/*
+
 const corsOptions = {
   origin: process.env.CLIENT_URL,
   credentials: true,
 };
 
 app.use(cors(corsOptions));
-
+/*
 const privateKey = fs.readFileSync(process.env.PRIVATE_KEY, "utf8");
 const certificate = fs.readFileSync(process.env.CERTIFICATE, "utf8");
 const ca = fs.readFileSync(process.env.CHAIN, "utf8");
