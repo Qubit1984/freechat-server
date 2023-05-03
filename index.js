@@ -1,6 +1,6 @@
 const express = require("express");
-const fs = require("fs");
-const https = require("https");
+//const fs = require("fs");
+//const https = require("https");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
@@ -12,12 +12,12 @@ const app = express();
 require("dotenv").config();
 
 const corsOptions = {
-  origin: [process.env.CLIENT_URL, process.env.PRODUCTION_CLIENT_URL],
+  origin: process.env.CLIENT_URL,
   credentials: true,
 };
 
 app.use(cors(corsOptions));
-
+/*
 const privateKey = fs.readFileSync(process.env.PRIVATE_KEY, "utf8");
 const certificate = fs.readFileSync(process.env.CERTIFICATE, "utf8");
 const ca = fs.readFileSync(process.env.CHAIN, "utf8");
@@ -26,7 +26,7 @@ const credentials = {
   key: privateKey,
   cert: certificate,
   ca: ca,
-};
+};*/
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -46,13 +46,13 @@ mongoose
 
 const HOST = process.env.HOST;
 
-const server = https.createServer(credentials, app);
-server.listen(process.env.PORT, HOST, () => {
-  console.log(`App is listening to port ${process.env.PORT}`);
-});
-/*const server = app.listen(process.env.PORT, HOST, () => {
+//const server = https.createServer(credentials, app);
+/*server.listen(process.env.PORT, HOST, () => {
   console.log(`App is listening to port ${process.env.PORT}`);
 });*/
+const server = app.listen(process.env.PORT, HOST, () => {
+  console.log(`App is listening to port ${process.env.PORT}`);
+});
 
 // socket.io
 initSocket(server, corsOptions);
