@@ -152,7 +152,7 @@ const postUserMessage = asyncHandler(async (req, res) => {
 
         //const newPath = destination + Date.now() + ".jpg";
         //const outputImagePath = "G:/uploads/" + Date.now() + ".jpg";
-        const fullPath = destination + filename;
+        const fullPath = destination + "/" + filename;
 
         // 使用 sharp 修改图片大小和类型
         //sharp(fullPath).jpeg(); // 将图像格式转换为 JPEG
