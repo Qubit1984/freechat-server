@@ -150,24 +150,24 @@ const postUserMessage = asyncHandler(async (req, res) => {
       } else {
         //const imagePath = req.file.path;
 
-        const newPath = destination + Date.now() + ".jpg";
+        //const newPath = destination + Date.now() + ".jpg";
         //const outputImagePath = "G:/uploads/" + Date.now() + ".jpg";
         const fullPath = destination + filename;
 
         // 使用 sharp 修改图片大小和类型
         //sharp(fullPath).jpeg(); // 将图像格式转换为 JPEG
 
-        fs.rename(fullPath, newPath, (err) => {
+        /* fs.rename(fullPath, newPath, (err) => {
           if (err) {
             console.error("Error renaming/moving file:", err);
             return;
           }
           console.log("File renamed/moved successfully.");
         });
-
+        */
         //fs.renameSync(uploadedFile.path, fullPath);
         newMessage = await Message.create({
-          imageUrl: newPath,
+          imageUrl: fullPath,
           users: [userId, chatId],
           sender: userId,
           readers: [],
