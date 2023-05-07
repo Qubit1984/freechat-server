@@ -167,6 +167,14 @@ const initSocket = (server, corsOptions) => {
         }
       });
     });
+
+    socket.on("clientSocketId", (socketId) => {
+      console.log("Received Socket ID:", socketId);
+
+      // 可以根据需要在这里处理与客户端的通信
+      // 例如，可以将消息发送给特定的客户端：
+      //io.to(socketId).emit("serverMessage", "Hello, client!");
+    });
   });
 };
 module.exports = {
