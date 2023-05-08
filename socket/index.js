@@ -1,5 +1,31 @@
 const Message = require("../model/Message");
 const fs = require("fs");
+const Token = require("../model/Token");
+const { Expo } = require("expo-server-sdk");
+
+const expo = new Expo();
+
+// 在服务器端向指定的 Socket ID 发送通知
+const sendExpoNotification = async (socketId, messageData) => {
+  const targetDeviceToken = await Token.findOne({ socketId });
+
+  // 创建通知对象
+  const notification = {
+    to: targetDeviceToken,
+    sound: "default",
+    title: "New Message",
+    body: messageData.message,
+    data: { data: messageData.message },
+  };
+
+  // 发送通知
+  try {
+    await expo.sendPushNotificationsAsync([notification]);
+    console.log("Expo notification sent successfully");
+  } catch (error) {
+    console.error("Failed to send Expo notification:", error);
+  }
+};
 
 const initSocket = (server, corsOptions) => {
   const io = require("socket.io")(server, { cors: corsOptions });
@@ -54,6 +80,7 @@ const initSocket = (server, corsOptions) => {
           socket
             .to(clientId)
             .emit("RECEIVE_MESSAGE", { ...messageData, unreadCount });
+          await sendExpoNotification(clientId, messageData);
         } else {
           // 读取图片文件
           const imagePath = messageData.imageUrl;
@@ -68,6 +95,7 @@ const initSocket = (server, corsOptions) => {
             },
             unreadCount,
           });
+          await sendExpoNotification(clientId, messageData);
         }
       }
     });
@@ -168,12 +196,13 @@ const initSocket = (server, corsOptions) => {
       });
     });
 
-    socket.on("clientSocketId", (socketId) => {
-      console.log("Received Socket ID:", socketId);
+    socket.on("associateToken", async (data) => {
+      const { socketId, token } = data;
 
-      // 可以根据需要在这里处理与客户端的通信
-      // 例如，可以将消息发送给特定的客户端：
-      //io.to(socketId).emit("serverMessage", "Hello, client!");
+      const tokenexpo = await Token.create({
+        socketId: socketId,
+        token: token,
+      });
     });
   });
 };
