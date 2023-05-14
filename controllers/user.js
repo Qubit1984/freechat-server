@@ -93,11 +93,10 @@ const getUserMessages = asyncHandler(async (req, res) => {
     const filter = type === "room" ? [chatId] : [userId, chatId];
     const messages = await Message.find()
       .all("users", filter)
-      .sort({ timestamp: 1 })
-      .limit(50)
-      .sort({ createdAt: 1 })
+      .sort({ createdAt: -1 })
+      .limit(40)
       .lean();
-
+    messages.reverse();
     const messagesWithAvatar = await Promise.all(
       messages.map(async (msg) => {
         const senderId = msg.sender;
